@@ -1,4 +1,4 @@
-# NolanbBailey Homebrew Brewery
+# NolanBailey Homebrew Brewery
 _A brewery tap for Homebrew Formulæ and Casks in development._
 _Provides support for projects in development, betas, and dev kits for contributors._
 
