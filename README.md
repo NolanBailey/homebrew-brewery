@@ -1,6 +1,8 @@
-# Nolanbailey Brewery
+# NolanbBailey Homebrew Brewery
+_A brewery tap for Homebrew Formulæ and Casks in development._
+_Provides support for projects in development, betas, and dev kits for contributors._
 
-## How do I install these formulae?
+## How do I install these formulæ?
 
 `brew install nolanbailey/brewery/<formula>`
 
