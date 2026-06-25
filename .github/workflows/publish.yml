@@ -1,46 +1,41 @@
 name: brew pr-pull
-
 on:
-  workflow_dispatch:
-    inputs:
-      pull_request:
-        description: Pull request number
-        required: true
-      head_sha:
-        description: Expected pull request head commit SHA (optional)
+  pull_request:
+    types:
+      - labeled
 
 jobs:
   pr-pull:
+    if: github.event.label.name == 'pr-pull'
     runs-on: ubuntu-latest
     permissions:
-      actions: read
-      checks: read
       contents: write
-      issues: read
+      packages: write
       pull-requests: write
     steps:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@main
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
 
       - name: Set up git
         uses: Homebrew/actions/git-user-config@main
 
-      - name: Pull bottles
+      - name: Pull and Upload Bottles to GHCR
         env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HEAD_SHA: ${{ inputs.head_sha }}
-          PULL_REQUEST: ${{ inputs.pull_request }}
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
-          if [[ -n "$HEAD_SHA" ]]
-          then
-            brew pr-pull --debug --tap="$GITHUB_REPOSITORY" --head-sha="$HEAD_SHA" "$PULL_REQUEST"
-          else
-            brew pr-pull --debug --tap="$GITHUB_REPOSITORY" "$PULL_REQUEST"
-          fi
+          # Log into the GitHub Container Registry
+          echo "${{ secrets.HOMEBREW_TAP_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Push commits
+          # Pull the PR artifacts and upload them as packages
+          brew pr-pull --debug --upload \
+            --root-url="https://ghcr.io{{ github.repository_owner }}/tap" \
+            --tap="$GITHUB_REPOSITORY" \
+            "${{ github.event.pull_request.number }}"
+
+      - name: Push formula changes back to main branch
         uses: Homebrew/actions/git-try-push@main
         with:
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           branch: main
