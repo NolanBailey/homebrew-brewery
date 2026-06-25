@@ -34,8 +34,8 @@ jobs:
       - name: Run brew test-bot --only-setup
         run: brew test-bot --only-setup
 
-      - name: Run brew test-bot --only-programmatic-checks
-        run: brew test-bot --only-programmatic-checks
+      - name: Run brew test-bot --only-tap-syntax
+        run: brew test-bot --only-tap-syntax
 
       - name: Run brew test-bot --only-formulae
         run: brew test-bot --only-formulae
