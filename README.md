@@ -6,7 +6,7 @@ _Provides support for projects in development, betas, and dev kits for contribut
 
 `brew install nolanbailey/brewery/<formula>`
 
-Or `brew tap nolanbailey/brewery` and then `brew install <formula>`.
+Or `brew tap nolanbailey/brewery` and then `brew install <formula>` (normal usage).
 
 Or, in a `brew bundle` `Brewfile`:
 
